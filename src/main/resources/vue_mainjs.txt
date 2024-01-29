@@ -1,0 +1,9 @@
+
+// websocket
+import VueNativeSock from 'vue-native-websocket'
+
+
+// websocket服务地址
+// Vue.use(VueNativeSock, 'ws://192.168.1.12:9208/ws')
+// 网关地址
+Vue.use(VueNativeSock, 'ws://192.168.1.12:8080/wss/ws')

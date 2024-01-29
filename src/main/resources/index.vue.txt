@@ -1,0 +1,73 @@
+<template>
+  <div>
+    {{ msg }}
+    <button @click="websocketsend">发送</button>
+  </div>
+</template>
+
+<script>
+// @ is an alias to /src
+
+export default {
+  name: 'Home',
+  components: {},
+  data () {
+    return {
+      msg: ''
+    }
+  },
+  methods: {
+    // 初始化weosocket
+    initWebSocket () {
+      // debugger
+      // alert(1)
+      this.$socket.onopen = this.webSocketOnOpen
+      this.$socket.onerror = this.webSocketOnError
+      this.$socket.onmessage = this.webSocketOnMessage
+      this.$socket.onclose = this.webSocketClose
+    },
+    webSocketOnOpen (e) {
+      //  链接ws服务器，e.target.readyState = 0/1/2/3
+      // 0 CONNECTING ,1 OPEN, 2 CLOSING, 3 CLOSED
+      console.log('WebSocket连接成功', e)
+    },
+
+    webSocketOnError (e) {
+      // 错误
+      console.log('WebSocket连接发生错误')
+    },
+
+    webSocketOnMessage (e) {
+      // 数据接收
+      // console.log(e)
+      console.log(e.data)
+      // console.log(JSON.parse(e.data))
+      this.msg = e.data
+    },
+    websocketsend (e) {
+      // 数据发送
+      this.$socket.send(JSON.stringify({ test: '测试数据' }))
+      // this.$socket.close(1000)
+      //    当前链接状态 https://developer.mozilla.org/zh-CN/docs/Web/API/WebSocket#%E5%B8%B8%E9%87%8F
+      console.log(this.$socket.readyState)
+    },
+
+    webSocketClose (e) {
+      // 关闭链接时触发
+      //  状态码表 https://developer.mozilla.org/zh-CN/docs/Web/API/CloseEvent
+      const code = e.code
+      const reason = e.reason
+      const wasClean = e.wasClean
+      console.log('1')
+      console.log(code, reason, wasClean)
+    }
+  },
+  mounted () {
+    console.log(this.$socket)
+    this.initWebSocket()
+  },
+  destroyed () {
+    this.$socket.close()
+  }
+}
+</script>
